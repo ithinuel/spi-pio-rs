@@ -23,7 +23,8 @@ defmt = { version = "0.3.0", optional = true }
 [dev-dependencies]
 rp2040-hal = { version = "0.8.0", features = ["defmt"] }
 rp-pico = "*"
-panic-halt = "0.2.0"
+#panic-halt = "0.2.0"
+panic-probe = { version = "*", features = ["print-defmt"] }
 embedded-hal = "0.2.5"
 cortex-m-rt = "0.7"
 nb = "1.0"
@@ -37,3 +38,4 @@ defmt-rtt = "0.4.0"
 
 [patch.crates-io]
 rp2040-hal = { git = "https://github.com/rp-rs/rp-hal" }
+embedded-sdmmc = { git = "https://github.com/rust-embedded-community/embedded-sdmmc-rs.git", branch = "more-api-cleanups" }

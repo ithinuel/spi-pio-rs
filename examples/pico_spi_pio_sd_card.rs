@@ -101,7 +101,8 @@ use defmt_rtt as _;
 
 // Ensure we halt the program on panic (if we don't mention this crate it won't
 // be linked)
-use panic_halt as _;
+//use panic_halt as _;
+use panic_probe as _;
 
 // Pull in any important traits
 use rp_pico::hal::prelude::*;
@@ -120,7 +121,7 @@ use rp_pico::hal;
 // Link in the embedded_sdmmc crate.
 // The `SdMmcSpi` is used for block level access to the card.
 // And the `Controller` gives access to the FAT filesystem functions.
-use embedded_sdmmc::{Controller, SdMmcSpi, TimeSource, Timestamp, VolumeIdx};
+use embedded_sdmmc::{Controller, SdCard, TimeSource, Timestamp, VolumeIdx};
 
 // Get the file open mode enum:
 use embedded_sdmmc::filesystem::Mode;
@@ -248,19 +249,20 @@ fn main() -> ! {
     // Exchange the uninitialised SPI driver for an initialised one
 
     info!("Aquire SPI SD/MMC BlockDevice...");
-    let mut sdspi = SdMmcSpi::new(spi, spi_cs);
+    let mut sdspi = SdCard::new(spi, spi_cs);
 
     blink_signals(&mut led_pin, &mut delay, &BLINK_OK_LONG);
 
     // Next we need to aquire the block device and initialize the
     // communication with the SD card.
-    let block = match sdspi.acquire() {
-        Ok(block) => block,
-        Err(e) => {
-            error!("Error retrieving card size: {}", defmt::Debug2Format(&e));
-            blink_signals_loop(&mut led_pin, &mut delay, &BLINK_ERR_2_SHORT);
-        }
-    };
+    let block = sdspi;
+    //let block = match sdspi.acquire() {
+    //    Ok(block) => block,
+    //    Err(e) => {
+    //        error!("Error retrieving card size: {}", defmt::Debug2Format(&e));
+    //        blink_signals_loop(&mut led_pin, &mut delay, &BLINK_ERR_2_SHORT);
+    //    }
+    //};
 
     blink_signals(&mut led_pin, &mut delay, &BLINK_OK_LONG);
 
